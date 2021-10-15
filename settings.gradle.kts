@@ -15,3 +15,4 @@ pluginManagement {
     }
 }
 
+include(":secp256k1")
