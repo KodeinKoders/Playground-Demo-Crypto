@@ -23,4 +23,4 @@ public fun Digest.hash(input: ByteArray, inputOffset: Int, len: Int): ByteArray 
 
 public fun Digest.hash(input: ByteArray): ByteArray = hash(input, 0, input.size)
 
-public fun sha256(): Digest = Sha256()
+public expect fun sha256(): Digest

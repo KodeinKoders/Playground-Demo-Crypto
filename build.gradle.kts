@@ -41,6 +41,12 @@ kotlin {
         }
         val iosMain by getting
         val iosTest by getting
+
+        all {
+            languageSettings {
+                optIn("kotlin.ExperimentalUnsignedTypes")
+            }
+        }
     }
 }
 
