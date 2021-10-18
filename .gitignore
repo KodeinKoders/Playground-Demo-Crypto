@@ -1,0 +1,24 @@
+# INTELLIJ
+.idea/
+*.ipr
+*.iml
+
+# SYSTEM FILES
+*~
+.DS_STORE
+
+# GRADLE
+.gradle
+build/
+.gradletasknamecache
+*local.properties
+
+# Native
+.externalNativeBuild/
+*.a
+*.o
+*.so
+.cxx/
+
+# XCode
+xcuserdata/
