@@ -1,3 +1,7 @@
+import com.android.build.gradle.tasks.factory.AndroidUnitTest
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Properties
+
 plugins {
     kotlin("multiplatform") version "1.6.21"
     id("com.android.library")
@@ -61,6 +65,42 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    externalNativeBuild {
+        cmake {
+            path("src/androidMain/cpp/CMakeLists.txt")
+        }
+    }
+}
+
+task<Exec>("generateJniHeaders") {
+    group = "build"
+    dependsOn("compileDebugKotlinAndroid")
+
+    afterEvaluate {
+        val output = "$buildDir/nativeHeaders/"
+        val compileTask = tasks["compileDebugKotlinAndroid"] as KotlinCompile
+        inputs.files(compileTask)
+        outputs.dir(output)
+        val classPath = compileTask.classpath + compileTask.outputs.files
+
+        val javah = (File("$rootDir/local.properties").takeIf { it.exists() } ?: error("Please create a local.properties file with a javah property (path to the javah binary)"))
+            .inputStream().use { Properties().apply { load(it) } }
+            .getProperty("javah") ?: error("Please add a javah property in the local.properties file (path to the javah binary)")
+
+        commandLine(javah, "-d", output, "-cp", classPath.joinToString(File.pathSeparator), "net.kodein.demo.crypto.Secp256k1Jni")
+    }
+}
+
+afterEvaluate {
+    tasks.filter { it.name.startsWith("configureCMake") } .forEach {
+        it.dependsOn("generateJniHeaders", ":secp256k1:buildSecp256k1Android")
+    }
+}
+
+afterEvaluate {
+    tasks.withType<AndroidUnitTest>().all {
+        enabled = false
     }
 }
 
