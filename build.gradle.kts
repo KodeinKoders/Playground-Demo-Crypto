@@ -6,6 +6,7 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform") version "1.6.21"
     id("com.android.library")
+    `maven-publish`
 }
 
 group = "net.kodein.demo.crypto"
@@ -19,7 +20,9 @@ repositories {
 kotlin {
     explicitApi()
 
-    android()
+    android {
+        publishAllLibraryVariants()
+    }
 
     fun KotlinNativeTarget.secp256k1CInterop() {
         compilations["main"].cinterops {
