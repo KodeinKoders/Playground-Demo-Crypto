@@ -27,6 +27,14 @@ kotlin {
                 includeDirs.headerFilterOnly(project.file("secp256k1/secp256k1/include/"))
                 tasks[interopProcessingTaskName].dependsOn(":secp256k1:buildSecp256k1Ios")
             }
+
+            val swiftChachaPoly by creating {
+                includeDirs.headerFilterOnly("$rootDir/SwiftChachaPoly/build/libs/$targetName/include")
+                tasks[interopProcessingTaskName].dependsOn(":SwiftChachaPoly:build${targetName.capitalize()}")
+
+//                // https://youtrack.jetbrains.com/issue/KT-48807#focus=Comments-27-5210791.0-0
+//                compilerOpts("-DNS_FORMAT_ARGUMENT(A)=")
+            }
         }
     }
 
