@@ -1,0 +1,12 @@
+package = secp256k1
+
+headers = secp256k1.h secp256k1_ecdh.h
+headerFilter = secp256k1/** secp256k1_ecdh.h secp256k1.h
+
+staticLibraries = libsecp256k1.a
+
+libraryPaths.ios_arm64 = secp256k1/build/ios/arm64 /usr/local/lib
+libraryPaths.ios_simulator_arm64 = secp256k1/build/ios/arm64-sim /usr/local/lib
+libraryPaths.ios_x64 = secp256k1/build/ios/x86_64-sim /usr/local/lib
+
+linkerOpts.ios = -framework Security -framework Foundation

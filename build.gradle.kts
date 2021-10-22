@@ -1,4 +1,5 @@
 import com.android.build.gradle.tasks.factory.AndroidUnitTest
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
@@ -20,11 +21,24 @@ kotlin {
 
     android()
 
-    ios()
+    fun KotlinNativeTarget.secp256k1CInterop() {
+        compilations["main"].cinterops {
+            val secp256k1 by creating {
+                includeDirs.headerFilterOnly(project.file("secp256k1/secp256k1/include/"))
+                tasks[interopProcessingTaskName].dependsOn(":secp256k1:buildSecp256k1Ios")
+            }
+        }
+    }
+
+    ios {
+        secp256k1CInterop()
+    }
 
     iosSimulatorArm64 {
         compilations["main"].defaultSourceSet.dependsOn(sourceSets["iosMain"])
         compilations["test"].defaultSourceSet.dependsOn(sourceSets["iosTest"])
+
+        secp256k1CInterop()
     }
 
     sourceSets {
